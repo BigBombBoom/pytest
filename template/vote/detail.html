@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>投票界面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        fieldset {
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        legend {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: red;
+            margin-top: 10px;
+        }
+
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .view-results-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 15px 9px;
+            cursor: pointer;
+            text-decoration: none; 
+            font-size: 6px;
+        }
+
+    </style>
+</head>
+<body>
+    <form action="{% url 'vote:vote' question.id %}" method="post">
+        {% csrf_token %}
+        <fieldset>
+            <legend><h1>{{ question.question_text }}</h1></legend>
+            {% if error_message %}
+                <p><strong>{{ error_message }}</strong></p>
+            {% endif %}
+            {% for choice in question.choice_set.all %}
+                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+            {% endfor %}
+        </fieldset>
+        <input type="submit" value="投票">
+    </form>
+    <br><br>
+    <a href="/vote/{{question.id}}/results/" class="view-results-btn">查看结果</a>
+</body>
+</html>

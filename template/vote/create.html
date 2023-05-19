@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>创建投票</title>
+    <style>
+        .option-container {
+
+            margin-bottom: 10px;
+        
+
+        }
+        .option-input {
+            margin-top: 5px;
+        }
+        .add-option-btn,
+        input[type="text"] {
+            margin-bottom: 10px;
+            width: 20%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .remove-option-btn {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #2196F3;
+            text-decoration: none;
+            color: #fff;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 200px;
+            border: none;
+        }
+        .add-option-btn {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #2196F3;
+            text-decoration: none;
+            color: #fff;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 200px;
+            border: none;
+        }
+        p {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>创建投票</h2>
+    {% if error_message %}
+        <p><strong>{{ error_message }}</strong></p>
+    {% endif %}
+   
+    <form action="/vote/create-vote/" method="post">
+        {% csrf_token %}
+        <p></p>
+        <label for="is-only">公式问题：</label>
+        <input type="checkbox" id="is-only" name="is-only">
+        <p></p>
+        <label for="question">问题：</label>
+        <input type="text" id="question" name="question" required>
+        <p></p>
+        <div class="option-container">
+            <label for="option-1">选项 1：</label>
+            <input type="text" id="option-1" name="option-1" required>
+        </div>
+        
+        <div id="option-container">
+
+        </div>
+        
+        
+        <button class="remove-option-btn" type="button" onclick="removeOption()">减少选项</button>
+        <button class="add-option-btn" type="button" onclick="addOption()">增加选项</button>
+        
+        <br><br>
+        
+        <input type="submit" value="提交">
+    </form>
+    
+    <script>
+        var optionCount = 2;
+        
+        function addOption() {
+            var container = document.getElementById("option-container");
+            var optionDiv = document.createElement("div");
+            optionDiv.classList.add("option-container");
+            
+            var label = document.createElement("label");
+            label.style.marginRight = "17px";
+            label.setAttribute("for", "option-" + optionCount);
+            label.textContent = "选项 " + optionCount + ":";
+            
+            var input = document.createElement("input");
+            input.setAttribute("type", "text");
+            input.setAttribute("id","option-" + optionCount);
+            input.setAttribute("name", "option-" + optionCount);
+            input.required = true;
+            input.classList.add("option-input");
+            
+            optionDiv.appendChild(label);
+            optionDiv.appendChild(input);
+            container.appendChild(optionDiv);
+            
+            optionCount++;
+        }
+        
+        function removeOption() {
+            if (optionCount > 2) {
+                optionCount--;
+                var container = document.getElementById("option-container");
+                container.removeChild(container.lastElementChild);
+            }
+        }
+    </script>
+</body>
+</html>

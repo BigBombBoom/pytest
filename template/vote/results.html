@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>查看结果</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>{{ question.question_text }}</h1>
+    <div style="width: 400px;height: 400px;">
+    <canvas id="chart"></canvas>
+
+    <ul>
+        {% for choice in question.choice_set.all %}
+            <li>{{ choice.choice_text }} - {{ choice.votes }} 票</li>
+        {% endfor %}
+    </ul>
+    </div>
+    <p> {% for choice in question.choice_set.all %}
+        <br>
+        {% endfor %}
+        <br>
+    </p>
+    {% if not question.is_only %}
+    <a href="{% url 'vote:detail' question.id %}">再投一次?</a>
+    <br><br>
+    {% endif %}
+    
+    <a href="/vote/">回到主界面</a>
+    
+    <script>
+        // 获取投票选项和票数的数据
+        var choices = [];
+        var votes = [];
+
+        {% for choice in question.choice_set.all %}
+            choices.push("{{ choice.choice_text }}");
+            votes.push({{ choice.votes }});
+        {% endfor %}
+
+        // 创建圆饼图
+        var ctx = document.getElementById("chart").getContext("2d");
+        var chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: choices,
+                datasets: [{
+                    data: votes,
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#8D6E63',
+                        '#4CAF50',
+                        '#E91E63',
+                        '#9C27B0',
+                        '#3F51B5',
+                        '#009688',
+                        '#FF5722'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    </script>
+</body>
+</html>

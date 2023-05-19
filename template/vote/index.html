@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>问题目录</title>
+<style>
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        margin-bottom: 10px;
+    }
+
+    .general_question {
+        display: inline-block;
+        padding: 5px 10px;
+        background-color: #f2f2f2;
+        text-decoration: none;
+        color: #333;
+        border-radius: 5px;
+    }
+    .unique_question {
+        display: inline-block;
+        padding: 5px 10px;
+        background-color: #e08d8d;
+        text-decoration: none;
+        color: #333;
+        border-radius: 5px;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 5px 10px;
+        background-color: #2196F3;
+        text-decoration: none;
+        color: #fff;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+</style>
+
+{% if latest_question_list %}
+    <ul>
+        {% for question in latest_question_list %}
+            {% if question.is_only %}
+            <li>
+                <a href="/vote/{{ question.id }}/" class="unique_question">{{ question.question_text }}</a>
+            </li>
+            {% else %}
+            <li>
+                <a href="/vote/{{ question.id }}/" class="general_question">{{ question.question_text }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+        
+    </ul>
+    <div>
+        <a class="button" href="/vote/create-vote/">创建投票</a>
+        <a class="button" href="/user/">用户信息</a>
+    </div>
+{% else %}
+    <p>No polls are available.</p>
+    <div>
+        <a class="button" href="/vote/create-vote/">创建投票</a>
+        <a class="button" href="/user/">用户信息</a>
+    </div>
+{% endif %}
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>用户信息</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .pagination {
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            margin-right: 5px;
+            text-decoration: none;
+            color: #333;
+            
+        }
+
+        .pagination .current-page {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #007bff;
+            border: 1px solid #007bff;
+            margin-right: 5px;
+            text-decoration: none;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>欢迎, {{ username }}</h1>
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">注销</button>
+    </form>
+
+    <h2>投票记录</h2>
+
+    <ul>
+        {% for record in vote_records %}
+            <li>{{ record.user }} - {{ record.question }} - {{ record.choice }} - {{ record.voted_at }}</li>
+        {% empty %}
+            <li>找不到投票记录.</li>
+        {% endfor %}
+    </ul>
+
+    <div class="pagination">
+        {% if vote_records.has_previous %}
+            <a href="?page={{ vote_records.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span class="current-page">{{ vote_records.number }}</span>
+
+        {% if vote_records.has_next %}
+            <a href="?page={{ vote_records.next_page_number }}">Next</a>
+        {% endif %}
+    </div>
+</body>
+</html>
